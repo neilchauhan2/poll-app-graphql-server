@@ -26,7 +26,7 @@ const NominationType = new GraphQLObjectType({
 
 // Poll Type
 const PollType = new GraphQLObjectType({
-    name: "Vote",
+    name: "Poll",
     fields: () => ({
         id: {
             type: GraphQLString
@@ -46,8 +46,12 @@ const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
         poll: {
-            type: "PollType",
-            args: { id: { type: GraphQLString } },
+            type: PollType,
+            args: {
+                id: {
+                    type: GraphQLString
+                }
+            },
             resolve(parent, args) {}
         }
     }
