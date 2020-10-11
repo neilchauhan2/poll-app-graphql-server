@@ -106,6 +106,28 @@ const Mutation = new GraphQLObjectType({
                     pollId: args.pollId
                 })
             }
+        },
+        addVote: {
+            type: NominationType,
+            args: {
+                id: {
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve(parent, args) {
+                return upVote(args.id);
+            }
+        },
+        removeVote: {
+            type: NominationType,
+            args: {
+                id: {
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve(parent, args) {
+                return downVote(args.id);
+            }
         }
     }
 })
