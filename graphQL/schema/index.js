@@ -7,6 +7,16 @@ const {
     GraphQLList,
     GraphQLSchema
 } = graphql;
+const {
+    getPoll,
+    createPoll
+} = require("../../db/controllers/poll");
+const {
+    createNomination,
+    upVote,
+    downVote,
+    getNominations
+} = require("../../db/controllers/nomination");
 
 // Nomination Type
 const NominationType = new GraphQLObjectType({
@@ -19,7 +29,10 @@ const NominationType = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLString)
         },
         count: {
-            type: new GraphQLNonNull(GraphQLInt)
+            type: GraphQLInt
+        },
+        pollId: {
+            type: new GraphQLNonNull(GraphQLString)
         }
     })
 });
@@ -36,7 +49,9 @@ const PollType = new GraphQLObjectType({
         },
         nominations: {
             type: GraphQLList(NominationType),
-            resolve(parent, args) {}
+            resolve(parent, args) {
+                return getNominations(parent.id);
+            }
         }
     })
 });
@@ -52,11 +67,50 @@ const RootQuery = new GraphQLObjectType({
                     type: GraphQLString
                 }
             },
-            resolve(parent, args) {}
+            resolve(parent, args) {
+                return getPoll(args.id);
+            }
         }
     }
 });
 
+const Mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+        addPoll: {
+            type: PollType,
+            args: {
+                name: {
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve(parent, args) {
+                return createPoll({
+                    name: args.name
+                });
+            }
+        },
+        addNomination: {
+            type: NominationType,
+            args: {
+                name: {
+                    type: new GraphQLNonNull(GraphQLString)
+                },
+                pollId: {
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve(parent, args) {
+                return createNomination({
+                    name: args.name,
+                    pollId: args.pollId
+                })
+            }
+        }
+    }
+})
+
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 });
