@@ -42,8 +42,20 @@ const downVote = async (id) => {
 	}
 }
 
+// get all nominations of a particular poll
+const getNominations = async (pollId) => {
+	try {
+		const nominations = await Nomination.find({pollId});
+		return nominations;
+	} catch(e) {
+		console.error(e);
+	}
+}
+
+
 module.exports = {
 	createNomination,
 	upVote,
-	downVote
+	downVote,
+	getNominations
 };

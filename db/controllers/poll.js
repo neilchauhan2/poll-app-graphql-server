@@ -13,7 +13,17 @@ const createPoll = async (pollCredentials) => {
 	}
 }
 
+// get Poll 
+const getPoll = async (id) => {
+	try {
+		const poll = await Poll.findById(id);
+		return poll;
+	} catch(e) {
+		console.error(e);
+	}
+}
 
 module.exports = {
-	createPoll
+	createPoll,
+	getPoll
 };
